@@ -42,10 +42,12 @@ window.addEventListener('resize',setCanvasSize);
 
 function setCanvasSize() {
 
+    const porcentWidth = 0.8;
+
     if(window.innerHeight > window.innerWidth) {
-        canvasSize = window.innerWidth * 0.8;
+        canvasSize = window.innerWidth * porcentWidth;
     } else {
-        canvasSize = window.innerHeight * 0.8;
+        canvasSize = window.innerHeight * porcentWidth;
     }
 
     canvas.setAttribute('width', canvasSize);
@@ -53,6 +55,8 @@ function setCanvasSize() {
 
     elementsSize = canvasSize / 10;
 
+    playerPosition.x = undefined;
+    playerPosition.y = undefined;
     startGame();
 }
 
