@@ -10,6 +10,9 @@ const btnLeft = document.querySelector('#left');
 const btnRight = document.querySelector('#right');
 const btnDown = document.querySelector('#down');
 
+const btnReload = document.querySelector('#reload');
+
+
 const spanLives = document.querySelector('#lives');
 const spanTime = document.querySelector('#time');
 const spanRecord = document.querySelector('#record');
@@ -141,7 +144,8 @@ function movePlayer() {
     })
 
     if(enemyCollision) {
-        loseLife();
+        emojis['PLAYER'] = '💀';
+        setTimeout(loseLife, 1500);
     }
 
     game.fillText(emojis['PLAYER'], playerPosition.x, playerPosition.y);
@@ -157,10 +161,12 @@ function loseLife() {
 
     if(lives > 1){
         lives--;
+        emojis['PLAYER'] = '👽';
     } else{
         level = 0;
         lives = 3;
         timeStart = undefined;
+        emojis['PLAYER'] = '👽';
     }
 
     playerPosition.x = undefined;
@@ -173,6 +179,8 @@ function loseLife() {
 function gameWin() {
     console.log('Terminaste el juego');
     clearInterval(timeInterval);
+
+    btnReload.style.display = "block";
 
     const recordTime = localStorage.getItem('record_Time');
     const timePlayer = Date.now() - timeStart;
@@ -203,19 +211,47 @@ function showLives() {
     spanLives.innerHTML = heartsArray.join('');
 }
 
+function formatTime(seconds, forRecord = false) {
+    const horas = Math.floor(seconds / 3600);
+    const minutos = Math.floor((seconds % 3600) / 60);
+    const segundos = Math.floor(seconds % 60);
+
+    return (
+        horas.toString().padStart(2, '0') +
+        ':' +
+        minutos.toString().padStart(2, '0') +
+        ':' +
+        segundos.toString().padStart(2, '0')
+    );
+}
+
 function showTime() {
-    spanTime.innerHTML = Date.now() - timeStart;
+    const tiempoTranscurridoEnSegundos = ((Date.now() - timeStart) / 1000);
+    const tiempoFormateado = formatTime(tiempoTranscurridoEnSegundos);
+    spanTime.innerHTML = tiempoFormateado;
 }
 
 function showRecord() {
-    spanRecord.innerHTML = localStorage.getItem('record_Time');
+    const recordTime = localStorage.getItem('record_Time');
+    const recordTimeEnSegundos = recordTime / 1000;
+    if(recordTime) {
+        const recordFormateado = formatTime(recordTimeEnSegundos);
+        spanRecord.innerHTML = recordFormateado;
+    }
 }
 
-window.addEventListener('keydown', moveByKeys)
+window.addEventListener('keydown', moveByKeys);
 btnUp.addEventListener('click', moveUp);
 btnLeft.addEventListener('click', moveLeft);
 btnRight.addEventListener('click', moveRight);
 btnDown.addEventListener('click', moveDown);
+
+btnReload.addEventListener('click',reloadGame);
+
+function reloadGame() {
+    location.reload();
+    btnReload.style.display = "block";
+}
 
 function moveByKeys(event) {
 

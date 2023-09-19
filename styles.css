@@ -38,6 +38,11 @@ body {
     padding: 5px 20px;
     width: 100px;
   }
+
+  #reload {
+    display: none;
+  }
+
   button:not(:last-child) {
     margin-right: 10px;
   }
